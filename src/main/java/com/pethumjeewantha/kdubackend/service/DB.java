@@ -17,12 +17,12 @@ public class DB {
         this.connection = connection;
     }
 
-    public List<dbDTO> getAllDetails() {
+    public List<dbDTO> getAllDetails(String id, String host) {
         List<dbDTO> details = new ArrayList<>();
 
         try {
             Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM db_details");
+            ResultSet rst = (id.equals("") && host.equals("")) ? stm.executeQuery("SELECT * FROM db_details") : stm.executeQuery("SELECT * FROM db_details WHERE sid ='" + id + "' AND host = '" + host + "';");
 
             while (rst.next()) {
                 details.add(new dbDTO(
@@ -51,7 +51,6 @@ public class DB {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(details);
         return details;
     }
 }

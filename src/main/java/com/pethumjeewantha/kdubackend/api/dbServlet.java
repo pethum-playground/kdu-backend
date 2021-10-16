@@ -18,11 +18,17 @@ import java.util.List;
 public class dbServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         try {
+            String id = request.getParameter("id");
+            String host = request.getParameter("host");
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/kdu_db", "root", "mysql");
             DB dbService = new DB(connection);
-            List<dbDTO> details = dbService.getAllDetails();
+            List<dbDTO> details = dbService.getAllDetails(id, host);
+            response.setContentType("application/json");
             response.getWriter().println(JsonbBuilder.create().toJson(details));
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
